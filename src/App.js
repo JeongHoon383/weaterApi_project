@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import "./App.css";
+import axios from "axios";
 
 // 1. 앱이 실행되자마자 현재 위치 기반의 날씨 정보가 보인다.
 // 2. 날씨 정보에는 도시, 섭씨, 화씨 날씨 상태
@@ -10,15 +11,32 @@ import "./App.css";
 
 // 1. 앱이 실행 되자마자 -> useEffect(함수, 배열)
 // 2. 현재 위치 -> get current location javascript 구글 검색
+// 3. 날씨 정보 가져오기
 
 function App() {
   const getCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       let lat = position.coords.latitude;
       let lon = position.coords.longitude;
-      console.log("현재 위치", lat, lon);
+      getWeaterByCurrentLocation(lat, lon);
     });
   };
+
+  const getWeaterByCurrentLocation = async (lat, lon) => {
+    let url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=c6de406e083c681266b9287653186f07`;
+    let response = await fetch(url);
+    let data = await response.json();
+    console.log(data);
+  };
+
+  // useEffect(() => {
+  //   axios({
+  //     method: "get",
+  //     url: "https://api.openweathermap.org/data/3.0/onecall?lat=37.5518227&lon=126.8489835&appid=c6de406e083c681266b9287653186f07",
+  //   }).then((result) => {
+  //     console.log(result.data);
+  //   });
+  // }, []);
 
   useEffect(() => {
     getCurrentLocation();
